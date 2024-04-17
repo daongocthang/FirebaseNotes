@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">FirebaseNotes</string>
+    <string name="hint_clear">clear</string>
+</resources>
