@@ -1,53 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingHorizontal="16dp">
 
-    <LinearLayout
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="8dp"
-        android:background="@drawable/ui_outline_box">
+        android:layout_marginVertical="5dp"
+        android:hint="Title"
+        app:endIconMode="clear_text"
+        app:helperText="Required*"
+        app:helperTextTextColor="@color/danger_dark">
 
-        <EditText
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@null"
-            android:hint="Title"
-            android:padding="10dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-    </LinearLayout>
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_title"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:maxLines="1" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <LinearLayout
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="8dp"
-        android:background="@drawable/ui_outline_box">
+        android:layout_marginVertical="5dp"
+        android:hint="Content">
 
-        <EditText
-            android:layout_width="0dp"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@null"
-            android:gravity="start|top"
-            android:hint="Content"
-            android:lines="3"
-            android:maxLines="5"
-            android:minLines="3"
-            android:padding="10dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-    </LinearLayout>
+            android:maxLines="10"
+            android:minHeight="48dp" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
+        android:id="@+id/btn_submit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/ui_button"
-        android:textSize="16sp"
-        android:text="submit"/>
-
+        android:layout_marginVertical="5dp"
+        android:text="submit" />
 </LinearLayout>
