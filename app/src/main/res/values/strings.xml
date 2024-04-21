@@ -1,4 +1,13 @@
 <resources>
     <string name="app_name">FirebaseNotes</string>
-    <string name="hint_clear">clear</string>
+    <string name="password">Mật khẩu</string>
+    <string name="re_password">Nhập lại mật khẩu</string>
+    <string name="login">Đăng nhập</string>
+    <string name="register">Đăng ký</string>
+    <string name="do_not_have_an_account">Bạn chưa có tài khoản?</string>
+    <string name="already_a_member">Bạn đã có tài khoản?</string>
+    <string name="register_here">Đăng ký ngay</string>
+    <string name="login_here">Đăng nhập ngay</string>
+    <string name="register_new_account">Đăng ký thành viên</string>
+    <string name="helper_password">* Mật khẩu chứa ít nhật 6 ký tự</string>
 </resources>

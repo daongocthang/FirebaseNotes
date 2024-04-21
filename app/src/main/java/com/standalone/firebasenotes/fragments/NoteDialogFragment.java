@@ -7,20 +7,22 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.standalone.firebasenotes.R;
+import com.standalone.firebasenotes.controllers.FirebaseHelper;
+import com.standalone.firebasenotes.models.Note;
 
 import java.util.Objects;
 
 public class NoteDialogFragment extends BottomSheetDialogFragment {
     public static final String TAG = NoteDialogFragment.class.getSimpleName();
-    EditText edTitle, edSubtitle;
+    EditText edTitle, edContent;
     Button btSubmit;
+    FirebaseHelper<Note> helper;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,18 +44,25 @@ public class NoteDialogFragment extends BottomSheetDialogFragment {
 
         // Declaring Components
         edTitle = view.findViewById(R.id.edt_title);
-        edSubtitle = view.findViewById(R.id.edt_subtitle);
+        edContent = view.findViewById(R.id.edt_subtitle);
         btSubmit = view.findViewById(R.id.btn_submit);
         btSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               onSubmit();
+                onSubmit();
             }
         });
+
+        helper = new FirebaseHelper<>("notes");
     }
 
     private void onSubmit() {
-        Toast.makeText(this.getContext(), "Progressing", Toast.LENGTH_SHORT).show();
+        // create a new value
+        Note note = new Note();
+
+        note.setTitle(edTitle.getText().toString());
+        note.setContent(edContent.getText().toString());
+        helper.create(note);
         dismiss();
     }
 }

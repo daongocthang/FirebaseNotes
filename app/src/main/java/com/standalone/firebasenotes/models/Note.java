@@ -1,19 +1,9 @@
 package com.standalone.firebasenotes.models;
 
-import androidx.recyclerview.widget.RecyclerView;
-
-public class Note {
-    String id, title, subtitle;
+public class Note extends BaseModel {
+    String title, content;
 
     public Note() {
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getTitle() {
@@ -24,11 +14,11 @@ public class Note {
         this.title = title;
     }
 
-    public String getSubtitle() {
-        return subtitle;
+    public String getContent() {
+        return content;
     }
 
-    public void setSubtitle(String subtitle) {
-        this.subtitle = subtitle;
+    public void setContent(String content) {
+        this.content = content;
     }
 }
