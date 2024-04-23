@@ -8,23 +8,24 @@
     android:paddingHorizontal="16dp">
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilTitle"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="5dp"
         android:hint="Title"
         app:endIconMode="clear_text"
-        app:helperText="Required*"
         app:helperTextTextColor="@color/danger_dark">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edt_title"
+            android:id="@+id/edtTitle"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tflContent"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,7 +33,7 @@
         android:hint="Subtitle">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edt_subtitle"
+            android:id="@+id/edtContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="1"
@@ -40,7 +41,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/btn_submit"
+        android:id="@+id/btnSubmit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="5dp"

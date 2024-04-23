@@ -1,6 +1,9 @@
 package com.standalone.firebasenotes.models;
 
-public class BaseModel {
+import java.util.Map;
+import java.util.Objects;
+
+public abstract class BaseModel {
     String key;
 
     public String getKey() {
@@ -10,4 +13,6 @@ public class BaseModel {
     public void setKey(String key) {
         this.key = key;
     }
+
+    public abstract Map<String, Object> toMap();
 }
