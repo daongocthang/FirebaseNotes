@@ -13,16 +13,15 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.standalone.firebasenotes.databinding.ActivityRegisterBinding;
+import com.standalone.firebasenotes.databinding.ActivitySignInBinding;
 import com.standalone.firebasenotes.utils.MsgBox;
 import com.standalone.firebasenotes.utils.ValidationManager;
 
 import java.util.Objects;
 
-
-public class RegisterActivity extends AppCompatActivity {
-    ActivityRegisterBinding binding;
-    ValidationManager manager;
+public class SignInActivity extends AppCompatActivity {
+    ActivitySignInBinding binding;
+    ValidationManager manager = ValidationManager.getInstance();
     FirebaseAuth auth;
 
     final String TAG = this.getClass().getSimpleName();
@@ -30,52 +29,53 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityRegisterBinding.inflate(getLayoutInflater());
+        binding = ActivitySignInBinding.inflate(getLayoutInflater());
+
         View view = binding.getRoot();
         setContentView(view);
-        manager = ValidationManager.getInstance();
-        auth = FirebaseAuth.getInstance();
 
-        binding.btnLoginHere.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(RegisterActivity.this, SignInActivity.class));
-                finish();
-            }
-        });
+        auth = FirebaseAuth.getInstance();
 
         binding.btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 manager.refresh();
                 manager.doValidation(binding.tilEmail).checkEmpty().checkEmail();
-                manager.doValidation(binding.tilPassword).checkEmpty().checkPassword();
-                manager.doValidation(binding.tilConfirmPassword).checkEmpty().matchPassword(binding.tilPassword);
+                manager.doValidation(binding.tilPassword).checkEmpty();
 
                 if (manager.isAllValid()) {
                     onSubmit();
                 }
             }
         });
+
+        binding.btnRegisterHere.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(SignInActivity.this, RegisterActivity.class);
+                        startActivity(intent);
+                    }
+                }
+        );
     }
 
     void onSubmit() {
         String email = Objects.requireNonNull(binding.edtEmail.getText()).toString();
         String password = Objects.requireNonNull(binding.edtPassword.getText()).toString();
-
-        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    Log.d(TAG, "createUserWithEMail:success");
-                    MsgBox.alert(RegisterActivity.this, MsgBox.MSG_SIGNUP_SUCCESS);
+                    Log.d(TAG, "signInWithEmail:success");
+                    startActivity(new Intent(SignInActivity.this, DashboardActivity.class));
+                    finish();
                 } else {
-                    Log.w(TAG, "createUserWithEMail:failure", task.getException());
-                    MsgBox.alert(RegisterActivity.this, MsgBox.MSG_SIGNUP_FAILURE);
+                    Log.w(TAG, "signInWithEmail:failure", task.getException());
+                    MsgBox.alert(SignInActivity.this, MsgBox.MSG_LOGIN_FAILURE);
                 }
             }
         });
     }
-
-
 }

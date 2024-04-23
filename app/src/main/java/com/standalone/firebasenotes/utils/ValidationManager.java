@@ -1,6 +1,5 @@
 package com.standalone.firebasenotes.utils;
 
-import android.util.Log;
 import android.widget.EditText;
 
 import com.google.android.material.textfield.TextInputLayout;
@@ -41,7 +40,7 @@ public class ValidationManager {
         boolean isEmptyValid = !isEmpty;
 
         if (isEmpty) {
-            textInputLayout.setError(MessageView.ERR_MSG_CHECK_EMPTY);
+            textInputLayout.setError(MsgBox.ERR_MSG_CHECK_EMPTY);
             appendToInvalidListIfNotExists();
         }
 
@@ -51,7 +50,7 @@ public class ValidationManager {
     public ValidationManager checkEmail() {
         boolean isEmailValid = editText.getText().toString().matches(EMAIL_PATTERN);
         if (!isEmpty && !isEmailValid) {
-            textInputLayout.setError(MessageView.ERR_MSG_CHECK_EMAIL);
+            textInputLayout.setError(MsgBox.ERR_MSG_CHECK_EMAIL);
             appendToInvalidListIfNotExists();
         }
 
@@ -62,7 +61,7 @@ public class ValidationManager {
         String passwordString = Objects.requireNonNull(password.getEditText()).getText().toString();
         boolean hasMatched = editText.getText().toString().equals(passwordString) && !passwordString.isEmpty();
         if (!isEmpty && !hasMatched) {
-            textInputLayout.setError(MessageView.ERR_MSG_MATCH_PASSWORD);
+            textInputLayout.setError(MsgBox.ERR_MSG_MATCH_PASSWORD);
             appendToInvalidListIfNotExists();
         }
 
@@ -75,7 +74,7 @@ public class ValidationManager {
         boolean isPasswordValid = matcher.matches();
 
         if (!isEmpty && !isPasswordValid) {
-            textInputLayout.setError(MessageView.ERR_MSG_CHECK_PASSWORD);
+            textInputLayout.setError(MsgBox.ERR_MSG_CHECK_PASSWORD);
             invalidList.add(textInputLayout);
             appendToInvalidListIfNotExists();
         }

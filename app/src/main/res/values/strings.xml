@@ -10,4 +10,5 @@
     <string name="login_here">Đăng nhập ngay</string>
     <string name="register_new_account">Đăng ký thành viên</string>
     <string name="helper_password">* Mật khẩu chứa ít nhật 6 ký tự</string>
+    <string name="close">Đóng</string>
 </resources>
