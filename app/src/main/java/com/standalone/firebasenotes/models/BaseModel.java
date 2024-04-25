@@ -1,9 +1,9 @@
 package com.standalone.firebasenotes.models;
 
+import java.io.Serializable;
 import java.util.Map;
-import java.util.Objects;
 
-public abstract class BaseModel {
+public abstract class BaseModel implements Serializable {
     String key;
 
     public String getKey() {

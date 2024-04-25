@@ -1,9 +1,10 @@
 package com.standalone.firebasenotes.models;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Note extends BaseModel {
+public class Note extends BaseModel{
     String title;
     String content;
 

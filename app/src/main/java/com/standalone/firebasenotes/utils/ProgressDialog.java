@@ -24,4 +24,6 @@ public class ProgressDialog extends Dialog {
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         setCancelable(false);
     }
+
+
 }

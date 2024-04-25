@@ -10,6 +10,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.standalone.firebasenotes.models.BaseModel;
+import com.standalone.firebasenotes.utils.ProgressDialog;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -28,13 +29,17 @@ public class FireStoreHelper<T extends BaseModel> {
         auth = FirebaseAuth.getInstance();
     }
 
-    public void create(T t) {
+    public Task<Void> create(T t) {
         String key = UUID.randomUUID().toString();
-        reference().document(key).set(t.toMap());
+        return reference().document(key).set(t.toMap());
     }
 
-    public void remove() {
+    public Task<Void> update(String key, T t) {
+        return reference().document(key).update(t.toMap());
+    }
 
+    public Task<Void> remove(String key) {
+        return reference().document(key).delete();
     }
 
     public void fetch(Class<T> classType, OnFetchCompleteListener<T> onFetchCompleteListener) {

@@ -1,6 +1,9 @@
 package com.standalone.firebasenotes.fragments;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,30 +12,30 @@ import android.view.WindowManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.standalone.firebasenotes.R;
 import com.standalone.firebasenotes.controllers.FireStoreHelper;
 import com.standalone.firebasenotes.databinding.DialogNoteBinding;
-import com.standalone.firebasenotes.interfaces.OnDataChangedListener;
 import com.standalone.firebasenotes.models.Note;
+import com.standalone.firebasenotes.utils.ProgressDialog;
 
 import java.util.Objects;
 
 public class NoteDialogFragment extends BottomSheetDialogFragment {
     public static final String TAG = NoteDialogFragment.class.getSimpleName();
-
-    OnDataChangedListener listener;
+    String keyReference;
 
     DialogNoteBinding binding;
 
-    FireStoreHelper<Note> helper;
+    public NoteDialogFragment() {
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NORMAL, R.style.AppTheme_Dialog);
 
-        listener = (OnDataChangedListener) getContext();
     }
 
     @Nullable
@@ -56,20 +59,50 @@ public class NoteDialogFragment extends BottomSheetDialogFragment {
             }
         });
 
-        helper = new FireStoreHelper<>();
+        Bundle args = getArguments();
+        if (args != null && args.containsKey("note")) {
+            Note note = (Note) args.getSerializable("note");
+            binding.edtTitle.setText(note.getTitle());
+            binding.edtContent.setText(note.getContent());
+            keyReference = note.getKey();
+        }
     }
 
 
     private void onSubmit() {
         // create a new value
         Note note = new Note();
-
         note.setTitle(Objects.requireNonNull(binding.edtTitle.getText()).toString());
         note.setContent(Objects.requireNonNull(binding.edtContent.getText()).toString());
-        helper.create(note);
+        ProgressDialog progress = new ProgressDialog(binding.getRoot().getContext());
+        progress.show();
+        FireStoreHelper<Note> helper = new FireStoreHelper<>();
+        Task<Void> task;
+        if (keyReference == null) {
+            task = helper.create(note);
+        } else {
+            task = helper.update(keyReference, note);
+        }
 
-        if (listener != null) listener.onDataChangedListener();
+        task.addOnCompleteListener(t -> {
+            progress.dismiss();
+        });
+
+
         dismiss();
     }
 
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        Context context=binding.getRoot().getContext();
+        if(context instanceof  OnDialogDismissListener){
+            ((OnDialogDismissListener) context).onDialogDismiss(dialog);
+        }
+
+        super.onDismiss(dialog);
+    }
+
+    public interface OnDialogDismissListener {
+        void onDialogDismiss(DialogInterface dialog);
+    }
 }
