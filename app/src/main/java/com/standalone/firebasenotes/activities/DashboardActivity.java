@@ -1,9 +1,12 @@
 package com.standalone.firebasenotes.activities;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +22,7 @@ import com.standalone.firebasenotes.controllers.FirebaseHelper;
 import com.standalone.firebasenotes.databinding.ActivityDashboardBinding;
 import com.standalone.firebasenotes.fragments.NoteDialogFragment;
 import com.standalone.firebasenotes.models.Note;
+import com.standalone.firebasenotes.utils.ProgressDialog;
 
 import java.util.ArrayList;
 
@@ -43,16 +47,6 @@ public class DashboardActivity extends AppCompatActivity {
             finish();
         }
 
-        helper = new FireStoreHelper<>("Notes");
-        helper.fetch(new FireStoreHelper.OnFetchCompleteListener<Note>() {
-            @Override
-            public void onFetchComplete(ArrayList<Note> data) {
-                for (Note note : data) {
-                    Log.d(TAG, note.toMap().toString());
-                }
-            }
-        });
-
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -63,17 +57,14 @@ public class DashboardActivity extends AppCompatActivity {
         NoteAdapter adapter = new NoteAdapter();
         binding.recycler.setAdapter(adapter);
 
-        FirebaseHelper<Note> helper = new FirebaseHelper<>("notes");
-        helper.addDataChangListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ArrayList<Note> itemList = helper.fetchAll(snapshot, Note.class);
-                adapter.setItemList(itemList);
-            }
+        ProgressDialog progressDlg = new ProgressDialog(this);
+        progressDlg.show();
 
+        helper = new FireStoreHelper<>();
+        helper.fetch(Note.class, new FireStoreHelper.OnFetchCompleteListener<Note>() {
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
+            public void onFetchComplete(ArrayList<Note> data) {
+                adapter.setItemList(data);
             }
         });
 

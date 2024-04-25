@@ -53,7 +53,7 @@ public class NoteDialogFragment extends BottomSheetDialogFragment {
             }
         });
 
-        helper = new FireStoreHelper<>("Notes");
+        helper = new FireStoreHelper<>();
     }
 
     private void onSubmit() {
