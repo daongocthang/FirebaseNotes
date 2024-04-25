@@ -2,13 +2,11 @@ package com.standalone.firebasenotes.controllers;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.standalone.firebasenotes.models.BaseModel;
-import com.standalone.firebasenotes.models.Note;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -45,7 +43,7 @@ public class FirebaseHelper<T extends BaseModel> {
         return itemList;
     }
 
-    public void addDataChangListener(ValueEventListener listener) {
+    public void addDataChangedListener(ValueEventListener listener) {
         db.child(path).addValueEventListener(listener);
     }
 }

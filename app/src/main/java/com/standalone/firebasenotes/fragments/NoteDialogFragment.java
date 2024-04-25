@@ -13,12 +13,15 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.standalone.firebasenotes.R;
 import com.standalone.firebasenotes.controllers.FireStoreHelper;
 import com.standalone.firebasenotes.databinding.DialogNoteBinding;
+import com.standalone.firebasenotes.interfaces.OnDataChangedListener;
 import com.standalone.firebasenotes.models.Note;
 
 import java.util.Objects;
 
 public class NoteDialogFragment extends BottomSheetDialogFragment {
     public static final String TAG = NoteDialogFragment.class.getSimpleName();
+
+    OnDataChangedListener listener;
 
     DialogNoteBinding binding;
 
@@ -29,7 +32,7 @@ public class NoteDialogFragment extends BottomSheetDialogFragment {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NORMAL, R.style.AppTheme_Dialog);
 
-
+        listener = (OnDataChangedListener) getContext();
     }
 
     @Nullable
@@ -56,6 +59,7 @@ public class NoteDialogFragment extends BottomSheetDialogFragment {
         helper = new FireStoreHelper<>();
     }
 
+
     private void onSubmit() {
         // create a new value
         Note note = new Note();
@@ -63,6 +67,9 @@ public class NoteDialogFragment extends BottomSheetDialogFragment {
         note.setTitle(Objects.requireNonNull(binding.edtTitle.getText()).toString());
         note.setContent(Objects.requireNonNull(binding.edtContent.getText()).toString());
         helper.create(note);
+
+        if (listener != null) listener.onDataChangedListener();
         dismiss();
     }
+
 }

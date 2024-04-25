@@ -1,24 +1,16 @@
 package com.standalone.firebasenotes.activities;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.ProgressBar;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
+import com.standalone.firebasenotes.interfaces.OnDataChangedListener;
 import com.standalone.firebasenotes.adapters.NoteAdapter;
 import com.standalone.firebasenotes.controllers.FireStoreHelper;
-import com.standalone.firebasenotes.controllers.FirebaseHelper;
 import com.standalone.firebasenotes.databinding.ActivityDashboardBinding;
 import com.standalone.firebasenotes.fragments.NoteDialogFragment;
 import com.standalone.firebasenotes.models.Note;
@@ -26,12 +18,13 @@ import com.standalone.firebasenotes.utils.ProgressDialog;
 
 import java.util.ArrayList;
 
-public class DashboardActivity extends AppCompatActivity {
+public class DashboardActivity extends AppCompatActivity implements OnDataChangedListener {
 
     final String TAG = this.getClass().getSimpleName();
     ActivityDashboardBinding binding;
     FirebaseAuth auth;
     FireStoreHelper<Note> helper;
+    NoteAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +47,14 @@ public class DashboardActivity extends AppCompatActivity {
             }
         });
 
-        NoteAdapter adapter = new NoteAdapter();
+        adapter = new NoteAdapter();
         binding.recycler.setAdapter(adapter);
 
+        onDataChangedListener();
+    }
+
+    @Override
+    public void onDataChangedListener() {
         ProgressDialog progressDlg = new ProgressDialog(this);
         progressDlg.show();
 
@@ -65,10 +63,8 @@ public class DashboardActivity extends AppCompatActivity {
             @Override
             public void onFetchComplete(ArrayList<Note> data) {
                 adapter.setItemList(data);
+                progressDlg.dismiss();
             }
         });
-
-
     }
-
 }
