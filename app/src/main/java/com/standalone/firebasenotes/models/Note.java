@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Note extends BaseModel {
-    String title, content;
+    String title;
+    String content;
 
     public Note() {
     }
