@@ -10,28 +10,26 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.standalone.firebasenotes.models.BaseModel;
-import com.standalone.firebasenotes.utils.ProgressDialog;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 
 public class FireStoreHelper<T extends BaseModel> {
     final String TAG = this.getClass().getSimpleName();
     FirebaseFirestore db;
     FirebaseAuth auth;
+    final String path;
 
-    public FireStoreHelper() {
+    public FireStoreHelper(String path) {
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
+        this.path = path;
     }
 
     public Task<Void> create(T t) {
-        String key = UUID.randomUUID().toString();
-        return reference().document(key).set(t.toMap());
+        return reference().document(t.getKey()).set(t.toMap());
     }
 
     public Task<Void> update(String key, T t) {
@@ -63,7 +61,7 @@ public class FireStoreHelper<T extends BaseModel> {
     }
 
     public CollectionReference reference() {
-        return db.collection(Objects.requireNonNull(auth.getUid()));
+        return db.collection("users").document(Objects.requireNonNull(auth.getUid())).collection(path);
     }
 
     private T make(DocumentSnapshot snapshot, Class<T> classType) {

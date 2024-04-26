@@ -1,10 +1,8 @@
 package com.standalone.firebasenotes.adapters;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +18,13 @@ import com.google.android.gms.tasks.Task;
 import com.standalone.firebasenotes.R;
 import com.standalone.firebasenotes.controllers.FireStoreHelper;
 import com.standalone.firebasenotes.fragments.NoteDialogFragment;
+import com.standalone.firebasenotes.interfaces.ItemInterface;
 import com.standalone.firebasenotes.models.Note;
 import com.standalone.firebasenotes.utils.ProgressDialog;
 
 import java.util.ArrayList;
 
-public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
+public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> implements ItemInterface {
 
     ArrayList<Note> itemList;
     final AppCompatActivity activity;
@@ -33,7 +32,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
 
     public NoteAdapter(AppCompatActivity activity) {
         this.activity = activity;
-        helper = new FireStoreHelper<>();
+        helper = new FireStoreHelper<>("notes");
 
     }
 
@@ -53,16 +52,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
 
         holder.tvTitle.setText(note.getTitle());
         holder.tvSubtitle.setText(note.getContent());
-
-        if (activity instanceof OnItemClickListener) {
-            final int pos = position;
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ((OnItemClickListener) activity).onItemClick(pos);
-                }
-            });
-        }
     }
 
     @Override
@@ -73,6 +62,51 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     @SuppressLint("NotifyDataSetChanged")
     public void setItemList(ArrayList<Note> itemList) {
         this.itemList = itemList;
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public void editItem(int pos) {
+        Note note = itemList.get(pos);
+        Bundle args = new Bundle();
+        args.putSerializable("note", note);
+        NoteDialogFragment fragment = new NoteDialogFragment();
+        fragment.setArguments(args);
+        fragment.show(activity.getSupportFragmentManager(), NoteDialogFragment.TAG);
+    }
+
+    @Override
+    public void removeItem(int pos) {
+        Note note = itemList.get(pos);
+        itemList.remove(pos);
+        notifyItemRemoved(pos);
+
+        ProgressDialog progress = new ProgressDialog(activity);
+        progress.show();
+        helper.remove(note.getKey()).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                progress.dismiss();
+            }
+        });
+    }
+
+    @Override
+    public Context getContext() {
+        return this.activity;
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void addItem(Note note) {
+        for (int i = 0; i < itemList.size(); i++) {
+            String key = itemList.get(i).getKey();
+            if (note.getKey().equals(key)) {
+                itemList.set(i, note);
+                notifyDataSetChanged();
+                return;
+            }
+        }
+        itemList.add(note);
         notifyDataSetChanged();
     }
 
@@ -98,34 +132,5 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
                 notifyDataSetChanged();
             }
         });
-    }
-
-    public void updateNote(int position) {
-        Note note = itemList.get(position);
-        Bundle args = new Bundle();
-        args.putSerializable("note", note);
-        NoteDialogFragment fragment = new NoteDialogFragment();
-        fragment.setArguments(args);
-        fragment.show(activity.getSupportFragmentManager(), NoteDialogFragment.TAG);
-    }
-
-    public void removeNote(int pos) {
-        Note note = itemList.get(pos);
-        itemList.remove(pos);
-        notifyItemRemoved(pos);
-
-        ProgressDialog progress = new ProgressDialog(activity);
-        progress.show();
-        helper.remove(note.getKey()).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                progress.dismiss();
-            }
-        });
-    }
-
-
-    public interface OnItemClickListener {
-        void onItemClick(int position);
     }
 }

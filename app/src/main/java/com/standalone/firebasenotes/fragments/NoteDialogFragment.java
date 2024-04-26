@@ -3,7 +3,6 @@ package com.standalone.firebasenotes.fragments;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +20,7 @@ import com.standalone.firebasenotes.models.Note;
 import com.standalone.firebasenotes.utils.ProgressDialog;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class NoteDialogFragment extends BottomSheetDialogFragment {
     public static final String TAG = NoteDialogFragment.class.getSimpleName();
@@ -35,7 +35,6 @@ public class NoteDialogFragment extends BottomSheetDialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NORMAL, R.style.AppTheme_Dialog);
-
     }
 
     @Nullable
@@ -68,7 +67,6 @@ public class NoteDialogFragment extends BottomSheetDialogFragment {
         }
     }
 
-
     private void onSubmit() {
         // create a new value
         Note note = new Note();
@@ -76,11 +74,13 @@ public class NoteDialogFragment extends BottomSheetDialogFragment {
         note.setContent(Objects.requireNonNull(binding.edtContent.getText()).toString());
         ProgressDialog progress = new ProgressDialog(binding.getRoot().getContext());
         progress.show();
-        FireStoreHelper<Note> helper = new FireStoreHelper<>();
+        FireStoreHelper<Note> helper = new FireStoreHelper<>("notes");
         Task<Void> task;
         if (keyReference == null) {
+            note.setKey(UUID.randomUUID().toString());
             task = helper.create(note);
         } else {
+            note.setKey(keyReference);
             task = helper.update(keyReference, note);
         }
 
@@ -88,21 +88,26 @@ public class NoteDialogFragment extends BottomSheetDialogFragment {
             progress.dismiss();
         });
 
+        Context context = getContext();
+        if (context instanceof DialogEventListener) {
+            ((DialogEventListener) context).onDialogSubmit(this.getDialog(), note);
+        }
 
         dismiss();
     }
 
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
-        Context context=binding.getRoot().getContext();
-        if(context instanceof  OnDialogDismissListener){
-            ((OnDialogDismissListener) context).onDialogDismiss(dialog);
+        Context context = getContext();
+        if (context instanceof DialogEventListener) {
+            ((DialogEventListener) context).onDialogCancel(dialog);
         }
-
         super.onDismiss(dialog);
     }
 
-    public interface OnDialogDismissListener {
-        void onDialogDismiss(DialogInterface dialog);
+    public interface DialogEventListener {
+        void onDialogSubmit(DialogInterface dialog, Note note);
+
+        void onDialogCancel(DialogInterface dialog);
     }
 }
