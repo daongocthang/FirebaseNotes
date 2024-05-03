@@ -59,11 +59,18 @@ public class SignInActivity extends AppCompatActivity {
                     }
                 }
         );
+
+        binding.btnForgetPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(SignInActivity.this, ResetPasswordActivity.class));
+            }
+        });
     }
 
     void onSubmit() {
-        String email = Objects.requireNonNull(binding.edtEmail.getText()).toString();
-        String password = Objects.requireNonNull(binding.edtPassword.getText()).toString();
+        String email = Objects.requireNonNull(binding.edtEmail.getText()).toString().trim();
+        String password = Objects.requireNonNull(binding.edtPassword.getText()).toString().trim();
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {

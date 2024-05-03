@@ -1,5 +1,7 @@
 package com.standalone.firebasenotes.utils;
 
+import android.annotation.SuppressLint;
+import android.text.TextUtils;
 import android.widget.EditText;
 
 import com.google.android.material.textfield.TextInputLayout;
@@ -10,6 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ValidationManager {
+    @SuppressLint("StaticFieldLeak")
     static ValidationManager instance;
     final String EMAIL_PATTERN = "[a-z0-9A-Z._-]+@[a-z]+\\.[a-z]+";
     final String PASSWORD_PATTERN = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=\\S+$).{6,20}$";
@@ -36,8 +39,7 @@ public class ValidationManager {
     }
 
     public ValidationManager checkEmpty() {
-        isEmpty = editText.getText().toString().isEmpty();
-        boolean isEmptyValid = !isEmpty;
+        isEmpty = editText.getText().toString().trim().isEmpty();
 
         if (isEmpty) {
             textInputLayout.setError(MsgBox.ERR_MSG_CHECK_EMPTY);
@@ -48,7 +50,7 @@ public class ValidationManager {
     }
 
     public ValidationManager checkEmail() {
-        boolean isEmailValid = editText.getText().toString().matches(EMAIL_PATTERN);
+        boolean isEmailValid = editText.getText().toString().trim().matches(EMAIL_PATTERN);
         if (!isEmpty && !isEmailValid) {
             textInputLayout.setError(MsgBox.ERR_MSG_CHECK_EMAIL);
             appendToInvalidListIfNotExists();
@@ -58,8 +60,8 @@ public class ValidationManager {
     }
 
     public ValidationManager matchPassword(TextInputLayout password) {
-        String passwordString = Objects.requireNonNull(password.getEditText()).getText().toString();
-        boolean hasMatched = editText.getText().toString().equals(passwordString) && !passwordString.isEmpty();
+        String passwordString = Objects.requireNonNull(password.getEditText()).getText().toString().trim();
+        boolean hasMatched = editText.getText().toString().trim().equals(passwordString) && !passwordString.isEmpty();
         if (!isEmpty && !hasMatched) {
             textInputLayout.setError(MsgBox.ERR_MSG_MATCH_PASSWORD);
             appendToInvalidListIfNotExists();
@@ -70,7 +72,7 @@ public class ValidationManager {
 
     public ValidationManager checkPassword() {
         pattern = Pattern.compile(PASSWORD_PATTERN);
-        matcher = pattern.matcher(editText.getText().toString());
+        matcher = pattern.matcher(editText.getText().toString().trim());
         boolean isPasswordValid = matcher.matches();
 
         if (!isEmpty && !isPasswordValid) {
@@ -87,6 +89,7 @@ public class ValidationManager {
     }
 
     public void refresh() {
+        isEmpty = false;
         if (invalidList.size() == 0) return;
 
         for (TextInputLayout child : invalidList) {

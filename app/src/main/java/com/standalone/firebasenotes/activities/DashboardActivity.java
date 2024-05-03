@@ -4,13 +4,18 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.standalone.firebasenotes.R;
 import com.standalone.firebasenotes.adapters.NoteAdapter;
 import com.standalone.firebasenotes.adapters.RecyclerItemTouchHelper;
 import com.standalone.firebasenotes.databinding.ActivityDashboardBinding;
@@ -35,6 +40,7 @@ public class DashboardActivity extends AppCompatActivity implements NoteDialogFr
         if (user == null) {
             startActivity(new Intent(this, SignInActivity.class));
             finish();
+            return;
         }
         adapter = new NoteAdapter(this);
         binding.recycler.setAdapter(adapter);
@@ -49,6 +55,21 @@ public class DashboardActivity extends AppCompatActivity implements NoteDialogFr
             }
         });
         adapter.fetchData();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.sm_logout) {
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(this, SignInActivity.class));
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

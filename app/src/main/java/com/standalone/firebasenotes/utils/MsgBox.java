@@ -12,6 +12,7 @@ public class MsgBox {
     public static final String ERR_MSG_MATCH_PASSWORD = "Mật khẩu nhập lại không khớp";
     public static final String ERR_MSG_CHECK_PASSWORD = "Mật khẩu có độ dài từ 6-20 ký tự bao gồm chữ cái và số";
     public static final String MSG_SIGNUP_SUCCESS = "Bạn đã đăng ký thành công.";
+    public static final String MSG_SEND_MAIL_SUCCESS = "Hệ thống đã gửi đường liên kết đến %s. Xin vui lòng kiểm tra Email.";
     public static final String MSG_SIGNUP_FAILURE = "Email đã được sử dụng.";
     public static final String MSG_LOGIN_FAILURE = "Email hoặc mật khẩu không đúng.";
 

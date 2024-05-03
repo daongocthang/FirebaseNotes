@@ -11,6 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="31">
+
         <activity
             android:name=".activities.DashboardActivity"
             android:exported="true">
@@ -20,9 +21,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.RegisterActivity" />
-        <activity android:name=".activities.SignInActivity" />
-
+        <activity
+            android:name=".activities.ResetPasswordActivity"
+            android:parentActivityName=".activities.SignInActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.RegisterActivity"
+            android:parentActivityName=".activities.SignInActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.SignInActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

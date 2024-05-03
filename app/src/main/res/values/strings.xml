@@ -11,4 +11,11 @@
     <string name="register_new_account">Đăng ký thành viên</string>
     <string name="helper_password">* Mật khẩu chứa ít nhật 6 ký tự</string>
     <string name="close">Đóng</string>
+    <string name="logout">Đăng xuất</string>
+    <string name="forget_password">Quên mật khẩu?</string>
+    <string name="send_mail">Gửi</string>
+    <string name="reset_password">Khôi phục mật khẩu</string>
+    <string name="helper_forget_password">
+        Vui lòng nhập Email bạn đã dùng để khôi phục mật khẩu.
+    </string>
 </resources>
